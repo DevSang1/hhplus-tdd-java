@@ -1,6 +1,6 @@
 package io.hhplus.tdd.point.controller;
 
-import io.hhplus.tdd.point.UserPoint;
+import io.hhplus.tdd.point.domain.UserPoint;
 import io.hhplus.tdd.point.domain.PointHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

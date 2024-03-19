@@ -1,46 +1,59 @@
 package io.hhplus.tdd.point;
 
-import io.hhplus.tdd.point.controller.PointController;
+import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.point.domain.UserPoint;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 class PointControllerTest {
-    private PointController pointController = new PointController();
-    private Long userId = 1L;
     // 동시성에 대한 테스트 케이스
     // 포인트 충전중 동시에 여러건들이 들어올 경우를 파악해야함
+
+    private UserPointTable userPointTable;
+
+    @BeforeEach
+    void setUp(){
+        userPointTable = new UserPointTable();
+    }
+
     @Test
-    void 포인트충전_후_부족으로_구매불가() {
+    void 잔고_부족으로_포인트사용_불가() {
         //given
-        pointController.charge(userId, 50L);
+        UserPoint userPoint = new UserPoint(1L, 100L, 0L);
+        long paymentAmount = 150L;
 
         //when & then
-        assertThrows(InterruptedException.class, () -> {
-            pointController.use(userId, 50L);
+        assertThrows(IllegalArgumentException.class, () -> {
+            userPoint.use(paymentAmount);
         });
     }
 
     @Test
-    void 포인트로_구매_성공() {
+    void 충전_성공() throws InterruptedException {
         //given
-        pointController.charge(userId, 200L); // 사용자에게 200포인트 충전
+        Long userId = 1L;
+        Long myAmount = 100L;
+        Long chargeAmount = 200L;
 
-        //when
-        UserPoint result = pointController.use(userId, 150L); // 150포인트 사용
+        //when & then
+        userPointTable.insertOrUpdate(userId, myAmount);
+        UserPoint updatedUserPoint = userPointTable.insertOrUpdate(userId, myAmount + chargeAmount);
 
-        //then
-        assertEquals(50L, result.getPoint());
+        assertEquals(myAmount + chargeAmount, updatedUserPoint.point());
     }
 
     @Test
-    void history() {
-    }
+    void 음수인경우_충전_실패() {
+        //given
+        Long userId = 1L;
+        Long myAmount = 100L;
+        Long chargeAmount = -10L;
 
-    @Test
-    void charge() {
-    }
+        //when & then
+        assertThrows(IllegalArgumentException.class, () -> {
+            userPointTable.insertOrUpdate(userId, myAmount + chargeAmount);
+        });
 
-    @Test
-    void use() {
     }
 }
