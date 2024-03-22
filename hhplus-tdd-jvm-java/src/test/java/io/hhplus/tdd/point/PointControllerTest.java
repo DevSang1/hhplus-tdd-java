@@ -4,11 +4,19 @@ import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.domain.UserPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+@SpringBootTest
 class PointControllerTest {
     // 동시성에 대한 테스트 케이스
     // 포인트 충전중 동시에 여러건들이 들어올 경우를 파악해야함
+
+//    @Autowired
+//    MockMvc mockMvc = new Mockmvc
 
     private UserPointTable userPointTable;
 
@@ -25,7 +33,6 @@ class PointControllerTest {
 
         //when & then
         assertThrows(IllegalArgumentException.class, () -> {
-            userPoint.use(paymentAmount);
         });
     }
 

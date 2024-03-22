@@ -34,7 +34,8 @@ configurations {
 
 dependencies {
 	implementation(libs.spring.boot.starter.web)
-	annotationProcessor(libs.spring.boot.configuration.processor)
+    implementation("junit:junit:4.13.1")
+    annotationProcessor(libs.spring.boot.configuration.processor)
 	testImplementation(libs.spring.boot.starter.test)
 
 	compileOnly(libs.lombok)
